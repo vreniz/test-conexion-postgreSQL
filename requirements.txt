@@ -1,0 +1,6 @@
+# requirements.txt
+# Dependencias para el pipeline: CSV -> limpieza -> normalizacion -> PostgreSQL
+
+pandas
+sqlalchemy
+psycopg2-binary
