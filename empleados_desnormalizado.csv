@@ -1,0 +1,27 @@
+id_empleado,nombre_empleado,departamento,jefe_departamento,sucursal,fecha_ingreso,salario_base,bono_pct,horas_extra_mes,activo,evaluacion_desempeno
+E001,Laura Diaz,Logistica,Marco Sanz,Norte,2022/08/26,12000.0,0.0,0,si,5.0
+E002,Gabriela Soto,Finanzas,Hugo Vega,Centro,2021/11/05,15000.0,0.0,8,Si,5.0
+E003,Juan Perez,Ventas,Roberto Diaz,Norte,2022/02/02,,0.0,0,si,3.0
+E004,Felipe Cruz,Finanzas,Hugo Vega,Centro,2022/04/14,22000.0,0.0,0,Si,2.0
+E005,Sofia Castro,Logistica,Marco Sanz,Este,2022/01/12,12000.0,0.2,12,Si,2.0
+E006,Ivan Mora,Ventas,Roberto Diaz,Norte,2019/07/19,28000.0,0.0,0,si,3.0
+E007,Valeria Nunez,TI,Elena Ruiz,Este,2020/10/05,22000.0,0.2,5,No,4.0
+E008,Oscar Leon,Marketing,Ana Fuentes,Norte,2023/05/17,15000.0,0.0,5,si,4.0
+E009,Paula Rios,Logistica,Marco Sanz,Este,2022/06/01,12000.0,0.0,8,si,2.0
+E010,Gabriela Soto,Logistica,Marco Sanz,Norte,2021/09/28,22000.0,0.0,0,SI,5.0
+E011,Felipe Cruz,Logistica,Marco Sanz,Sur,2021/10/14,28000.0,0.15,0,Si,4.0
+E012,Maria Lopez,TI,Elena Ruiz,Centro,2023/02/06,35000.0,0.1,12,SI,4.0
+E013,Gabriela Soto,Logistica,Marco Sanz,Este,2022/10/01,18000.0,0.0,5,No,2.0
+E014,Cesar Ortiz,Finanzas,Hugo Vega,Centro,2019/05/01,15000.0,0.1,20,Si,3.0
+E015,Gabriela Soto,TI,Elena Ruiz,Este,2023/11/20,22000.0,0.0,8,Si,5.0
+E016,Gabriela Soto,Finanzas,Hugo Vega,Sur,2019/10/08,45000.0,0.15,5,si,5.0
+E017,Andres Nino,Logistica,Marco Sanz,Este,2019/11/06,12000.0,0.05,0,Si,3.0
+E018,Ricardo Paz,Ventas,Roberto Diaz,Este,2022/04/21,15000.0,0.1,0,Si,2.0
+E019,Felipe Cruz,TI,Elena Ruiz,Sur,2022/03/05,18000.0,0.05,12,SI,
+E020,Laura Diaz,TI,Elena Ruiz,Este,2021/03/28,22000.0,0.0,20,No,5.0
+E021,Juan Perez,Ventas,Roberto Diaz,Norte,2020/03/03,22000.0,0.05,5,Si,
+E022,Felipe Cruz,Ventas,Roberto Diaz,Centro,2019/11/06,28000.0,0.0,12,Si,
+E023,Felipe Cruz,Ventas,Roberto Diaz,Norte,2021/02/09,15000.0,0.1,12,Si,5.0
+E024,Juan Perez,TI,Elena Ruiz,Centro,2023/10/05,22000.0,0.15,8,No,4.0
+E025,Juan Perez,Ventas,Roberto Diaz,Norte,2023/03/16,18000.0,0.1,20,No,2.0
+E009,Paula Rios,Logistica,Marco Sanz,Este,2022/06/01,12000.0,0.0,8,si,2.0

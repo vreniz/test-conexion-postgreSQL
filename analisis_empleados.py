@@ -13,11 +13,8 @@ Como se ejecuta:
 """
 
 import pandas as pd
-import matplotlib
-matplotlib.use("Agg")  # permite guardar la imagen aunque no haya pantalla
-import matplotlib.pyplot as plt
 import os
-from cargar_a_postgres_directo import cargar_tablas_normalizadas
+from carga_postgres import cargar_tablas_normalizadas
 
 # Crea la carpeta donde vamos a guardar los resultados
 os.makedirs("salidas", exist_ok=True)
@@ -314,146 +311,14 @@ print("\nTablas normalizadas creadas en memoria:")
 print(f"  departamentos: {len(departamentos)} filas")
 print(f"  sucursales:    {len(sucursales)} filas")
 print(f"  empleados:     {len(empleados)} filas")
-
-
 # =============================================================================
-# PASO 6 - RESPONDER LAS PREGUNTAS
+# PASO 6 - CARGAR LAS TABLAS NORMALIZADAS A POSTGRESQL
 # =============================================================================
-titulo("PASO 6 - RESPUESTAS")
 
-# ---- PREGUNTA 1 --------------------------------------------------------------
-sub("PREGUNTA 1: costo total de nomina por departamento (solo activos)")
-activos = df[df["activo"] == "Si"]
-nomina = (
-    activos.groupby("departamento")["costo_total"]
-    .sum()
-    .sort_values(ascending=False)
-)
-print(nomina.to_string())
-print(f"\nEmpleados activos: {len(activos)} de {len(df)}")
-print(f"Nomina total de activos: {nomina.sum():,.2f}")
-
-# ---- PREGUNTA 2 --------------------------------------------------------------
-sub("PREGUNTA 2: correlacion entre horas extra y evaluacion")
-datos_corr = df.dropna(subset=["evaluacion_desempeno"])
-correlacion = datos_corr["horas_extra_mes"].corr(datos_corr["evaluacion_desempeno"])
-print(f"Registros usados: {len(datos_corr)} (se ignoraron {len(df) - len(datos_corr)} sin evaluacion)")
-print(f"Coeficiente de correlacion de Pearson: {correlacion:.4f}")
-
-# Como se lee: va de -1 a 1. Cerca de 0 = no hay relacion.
-if abs(correlacion) < 0.3:
-    fuerza = "DEBIL (practicamente no hay relacion)"
-elif abs(correlacion) < 0.7:
-    fuerza = "MODERADA"
-else:
-    fuerza = "FUERTE"
-sentido = "positiva (suben juntas)" if correlacion > 0 else "negativa (una sube, la otra baja)"
-print(f"Interpretacion: correlacion {fuerza}, {sentido}.")
-
-# ---- PREGUNTA 3 --------------------------------------------------------------
-sub("PREGUNTA 3: sucursal con mayor antiguedad promedio")
-antiguedad = (
-    df.groupby("sucursal")["antiguedad_anios"]
-    .mean()
-    .sort_values(ascending=False)
-)
-print(antiguedad.round(2).to_string())
-print(f"\nGanadora: {antiguedad.idxmax()} con {antiguedad.max():.2f} años promedio.")
-
-# ---- PREGUNTA 4 --------------------------------------------------------------
-sub("PREGUNTA 4: efecto de eliminar duplicados")
-diferencia = nomina_con_duplicados - nomina.sum()
-print(f"Filas antes de limpiar:        {filas_antes}")
-print(f"Filas despues de limpiar:      {filas_despues}")
-print(f"Duplicados eliminados:         {filas_antes - filas_despues}")
-print(f"Nomina CON duplicados:         {nomina_con_duplicados:,.2f}")
-print(f"Nomina SIN duplicados (real):  {nomina.sum():,.2f}")
-print(f"Diferencia (dinero fantasma):  {diferencia:,.2f}")
-if nomina_con_duplicados:
-    print(f"Es decir, estabamos inflando la nomina un {diferencia / nomina_con_duplicados * 100:.2f}%.")
-
-# ---- PREGUNTA 5 --------------------------------------------------------------
-sub("PREGUNTA 5: cuartiles de salario")
-# qcut parte los datos en 4 grupos con la MISMA CANTIDAD de empleados cada uno.
-# Q1 = los sueldos mas bajos ... Q4 = los sueldos mas altos.
-df["cuartil_salario"] = pd.qcut(df["salario_base"], 4, labels=["Q1", "Q2", "Q3", "Q4"])
-
-print("Empleados por cuartil:")
-print(df["cuartil_salario"].value_counts().sort_index().to_string())
-
-print("\nRango de salario de cada cuartil:")
-print(df.groupby("cuartil_salario", observed=True)["salario_base"]
-        .agg(["min", "max", "count"]).to_string())
-
-cuartil_alto = df[df["cuartil_salario"] == "Q4"]
-conteo_q4 = cuartil_alto["departamento"].value_counts()
-print("\nEmpleados en el cuartil mas alto (Q4) por departamento:")
-print(conteo_q4.to_string())
-print(f"\nDepartamento que concentra mas empleados en Q4: {conteo_q4.idxmax()} ({conteo_q4.max()} empleados).")
-
-tabla_cruzada = pd.crosstab(df["departamento"], df["cuartil_salario"])
-print("\nTabla cruzada departamento vs cuartil:")
-print(tabla_cruzada.to_string())
-
-
-# =============================================================================
-# PASO 7 - DASHBOARD DE 4 PANELES
-# =============================================================================
-titulo("PASO 7 - GRAFICO FINAL")
-
-fig, axes = plt.subplots(2, 2, figsize=(14, 10))
-fig.suptitle("TiendaMax - Dashboard de Recursos Humanos", fontsize=16, fontweight="bold")
-
-# Panel 1: nomina por departamento
-axes[0, 0].bar(nomina.index, nomina.values, color="#4C72B0")
-axes[0, 0].set_title("Costo de nomina por departamento (solo activos)")
-axes[0, 0].set_ylabel("Costo total")
-axes[0, 0].tick_params(axis="x", rotation=45)
-for i, v in enumerate(nomina.values):
-    axes[0, 0].text(i, v, f"{v/1000:.0f}k", ha="center", va="bottom", fontsize=9)
-
-# Panel 2: horas extra vs evaluacion
-axes[0, 1].scatter(
-    datos_corr["horas_extra_mes"], datos_corr["evaluacion_desempeno"],
-    color="#DD8452", s=80, alpha=0.7, edgecolors="black",
-)
-axes[0, 1].set_title(f"Horas extra vs evaluacion (r = {correlacion:.3f})")
-axes[0, 1].set_xlabel("Horas extra al mes")
-axes[0, 1].set_ylabel("Evaluacion de desempeño")
-axes[0, 1].grid(alpha=0.3)
-
-# Panel 3: antiguedad por sucursal
-axes[1, 0].bar(antiguedad.index, antiguedad.values, color="#55A868")
-axes[1, 0].set_title("Antiguedad promedio por sucursal")
-axes[1, 0].set_ylabel("Años")
-for i, v in enumerate(antiguedad.values):
-    axes[1, 0].text(i, v, f"{v:.1f}", ha="center", va="bottom", fontsize=9)
-
-# Panel 4: empleados por cuartil salarial
-conteo_cuartiles = df["cuartil_salario"].value_counts().sort_index()
-axes[1, 1].bar(conteo_cuartiles.index.astype(str), conteo_cuartiles.values, color="#C44E52")
-axes[1, 1].set_title("Distribucion de empleados por cuartil salarial")
-axes[1, 1].set_ylabel("Cantidad de empleados")
-for i, v in enumerate(conteo_cuartiles.values):
-    axes[1, 1].text(i, v, str(v), ha="center", va="bottom", fontsize=9)
-
-plt.tight_layout()
-plt.savefig("salidas/ej2_dashboard.png", dpi=150)
-print("Grafico guardado en salidas/ej2_dashboard.png")
-# plt.show()  # descomenta esta linea si quieres que se abra la ventana del grafico
-
-# =============================================================================
-# PASO 8 - CARGAR DIRECTAMENTE A POSTGRESQL
-# =============================================================================
-titulo("PASO 8 - CARGAR TABLAS NORMALIZADAS DIRECTAMENTE A POSTGRESQL")
-
-print("Los DataFrames normalizados siguen en memoria.")
-print("No se generan CSV intermedios para departamentos, sucursales ni empleados.")
+titulo("PASO 6 - CARGAR TABLAS NORMALIZADAS A POSTGRESQL")
 
 cargar_tablas_normalizadas(
-    departamentos=departamentos,
-    sucursales=sucursales,
-    empleados=empleados,
+    departamentos,
+    sucursales,
+    empleados
 )
-
-titulo("LISTO. PIPELINE COMPLETO: CSV -> LIMPIEZA -> NORMALIZACION -> POSTGRESQL")

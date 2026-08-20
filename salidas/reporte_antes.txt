@@ -1,0 +1,28 @@
+FOTO ANTES DE LA LIMPIEZA
+========================================
+Filas: 26
+Columnas: 11
+
+Nulos por columna:
+id_empleado             0
+nombre_empleado         0
+departamento            0
+jefe_departamento       0
+sucursal                0
+fecha_ingreso           0
+salario_base            1
+bono_pct                0
+horas_extra_mes         0
+activo                  0
+evaluacion_desempeno    3
+
+Filas duplicadas: 1
+
+Valores de 'activo':
+activo
+Si    11
+si     7
+No     5
+SI     3
+
+Tipo de dato de fecha_ingreso: str
