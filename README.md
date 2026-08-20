@@ -12,4 +12,4 @@ Luego volver intentar la activación.
 En caso que requieras salir del entorno virtual usa `deactivate`
 3. Se puede tener un archivo `requirements.txt` con todas las librerias que se necesiten.
 Para instalarlas se hace con el entorno virtual activo de la siguiente manera `pip install -r requirements.txt`
-4. 
+4. falta

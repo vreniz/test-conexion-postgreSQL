@@ -10,7 +10,7 @@ USUARIO = "postgres"
 PASSWORD = "1234"       # Cambia esto por tu contraseña real
 HOST = "localhost"
 PUERTO = 5432
-BASE_DATOS = "tiendamax"
+BASE_DATOS = "tienda2"
 
 
 def _crear_engine():
